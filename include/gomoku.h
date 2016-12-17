@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 11:47:16 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/12/17 14:21:22 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2016/12/17 19:24:26 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,18 @@ typedef struct			s_pos
 	int					y;
 	int					h;
 }						t_pos;
+
+typedef struct			s_heuristic
+{
+	int					alpha;
+	int					beta;
+}						t_heuristic;
+
+typedef struct			s_player
+{
+	t_space				color;
+	int					maximizing;
+}						t_player;
 
 t_board		*read_board(int fd);
 void		print_board(t_board *board);
