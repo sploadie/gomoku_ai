@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 12:26:44 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/12/17 13:09:33 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/15 12:29:23 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ t_board		*read_board(int fd)
 {
 	int		i, j;
 	int		ret, len;
-	char 	buf[243];
+	char 	buf[BOARD_FILE_SIZE];
 	t_board	board;
 
 	len = 0;
-	while (len < 243)
+	while (len < BOARD_FILE_SIZE)
 	{
-		ret = read(fd, buf + len, 243 - len);
+		ret = read(fd, buf + len, BOARD_FILE_SIZE - len);
 		if (ret < 1)
 		{
 			perror("Input");
@@ -34,10 +34,12 @@ t_board		*read_board(int fd)
 	{
 		for (j = 0; j < 15; ++j)
 		{
-			board.map[i][j] = buf[(i * 16) + j];
+			board.map[i][j] = buf[(j * 16) + i];
 		}
 	}
-	board.white = buf[240] - '0';
-	board.black = buf[241] - '0';
+	board.white = buf[BOARD_FILE_SIZE - 3] - '0';
+	board.black = buf[BOARD_FILE_SIZE - 2] - '0';
+	board.white5 = line5(&board, WHITE);
+	board.black5 = line5(&board, BLACK);
 	return memdup(&board, sizeof(t_board));
 }

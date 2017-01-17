@@ -6,57 +6,100 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 14:22:12 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/12/17 19:24:55 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/17 17:00:28 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gomoku.h"
 
-int		max(int a, int b)
+t_ab		ab_new(void)
+{
+	t_ab	heuristic;
+
+	heuristic.alpha = INT_MIN;
+	heuristic.beta  = INT_MAX;
+	return heuristic;
+}
+
+static int	max(int a, int b)
 {
 	return (a >= b ? a : b);
 }
 
-int		min(int a, int b)
+static int	min(int a, int b)
 {
 	return (a <= b ? a : b);
 }
 
-t_pos	alphabeta(t_board board, t_heuristic *prev_h, int depth, t_player player)
+int		alphabeta_recurse(t_board *board, t_board *board_memory, int depth, t_ab ab, t_player player)
 {
-	int 	value, new_h;
-	t_pos	moves[191];
-	t_pos	*move;
+	int		value, i, count;
 
-	moves_get(board, &moves, prev_h, player, maximizing);
-	move = moves;
-	if (depth == 0 || alpha == INT_MAX || beta == INT_MIN)
-		return *prev_h;
-	if (maximizing)
+	if (board->h == INT_MAX || board->h == INT_MIN)
+		return board->h;
+	if (depth == g_alphabeta_depth)
+		return heuristic_full_board(&board);
+	count = moves_get_boards(board, player, board_memory);
+	if (count == 0)
+		return 0;
+	if (player.maximizing)
 	{
 		value = INT_MIN;
-		while (move->x != -1)
+		for (i = 0; i < count; ++i)
 		{
-			new_h = move_do(&board, prev_h, move, player, maximizing);
-			value = max(value, alphabeta(board, &new_h, depth - 1, alpha, beta, (player == 'w' ? 'b' : 'w'), 0));
-			alpha = max(alpha, value);
-			if (beta <= alpha)
+			value = max(value, alphabeta_recurse(board_memory + i, board_memory + MAX_MOVES, depth + 1, ab, player_switch(player)));
+			ab.alpha = max(ab.alpha, value);
+			if (ab.beta <= ab.alpha)
 				break ; // beta cut-off
-			move++;
 		}
 		return value;
 	}
 	else
 	{
 		value = INT_MAX;
-		while (move->x != -1)
+		for (i = 0; i < count; ++i)
 		{
-			new_h = move_do(&board, move, prev_h, player, maximizing);
-			value = min(value, alphabeta(board, &new_h, depth - 1, alpha, beta, (player == 'w' ? 'b' : 'w'), 1));
-			beta = min(beta, value);
-			if (beta <= alpha)
+			value = min(value, alphabeta_recurse(board_memory + i, board_memory + MAX_MOVES, depth + 1, ab, player_switch(player)));
+			ab.beta = min(ab.beta, value);
+			if (ab.beta <= ab.alpha)
 				break ; // alpha cut-off
 		}
 		return value;
 	}
+}
+
+// COLOR OF MAXIMIZING PLAYER (AI PLAYER) ALWAYS
+t_move	alphabeta(t_board *board, int color)
+{
+	t_move		*moves;
+	t_move		*best;
+	int			value, i, count;
+	t_ab		ab = ab_new();
+	t_player	player = player_create(color, 1);
+	t_board		*board_memory;
+	t_board		*tmp;
+
+	moves = malloc(sizeof(t_move) * MAX_MOVES);
+	board_memory = malloc(sizeof(t_board) * MAX_MOVES * (g_alphabeta_depth + 1));
+	heuristic_full_board(board, &player);
+	count = moves_get(*board, player, moves);
+	if (count == 0)
+		return move_create(-1, -1, 0);
+	best = moves; // By default, first move is best move, jic
+	for (i = 0; i < count, ++i)
+	{
+		board_memory[i] = *board;
+		heuristic_partial_move(board_memory + i, player, moves[i].x, moves[i].y);
+		value = alphabeta_recurse(board_memory + i, board_memory + MAX_MOVES, 1, ab, player_switch(player));
+		if (value > ab.alpha)
+		{
+			best = moves + i;
+			ab.alpha = value;
+			if (ab.alpha == INT_MAX)
+				break ;
+		}
+	}
+	free(moves);
+	free(board_memory);
+	return *best;
 }

@@ -6,7 +6,7 @@
 #    By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/20 16:35:37 by tgauvrit          #+#    #+#              #
-#    Updated: 2016/12/17 13:17:56 by tgauvrit         ###   ########.fr        #
+#    Updated: 2016/12/18 17:00:21 by tgauvrit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,14 @@ SRC_DIR =		./src/
 OBJ_DIR_NAME =	obj
 OBJ_DIR =		./$(OBJ_DIR_NAME)/
 
-FILENAMES :=	main memdup print_board read_board
+FILENAMES :=	main		\
+				memdup		\
+				print_board	\
+				read_board	\
+				heuristic	\
+				player		\
+				board		\
+				move
 
 OBJ_PATHS :=	$(addsuffix .o, $(FILENAMES))
 OBJ_PATHS :=	$(addprefix $(OBJ_DIR),$(OBJ_PATHS))

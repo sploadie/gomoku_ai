@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 13:08:22 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/12/17 13:24:09 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/15 10:53:58 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,20 @@
 void	print_board(t_board *board)
 {
 	int 	i, j, c;
-	char	buf[243];
+	char	buf[BOARD_FILE_SIZE];
 
 	c = 0;
-	for (i = 0; i < 15; ++i)
+	for (j = 0; j < 15; ++j)
 	{
-		for (j = 0; j < 15; ++j)
+		for (i = 0; i < 15; ++i)
 			buf[c++] = board->map[i][j];
 		buf[c++] = '\n';
 	}
 	buf[c++] = '0' + board->white;
 	buf[c++] = '0' + board->black;
+	buf[c++] = '\n';
+	buf[c++] = '0' + board->white5;
+	buf[c++] = '0' + board->black5;
 	buf[c] = '\n';
-	write(1, buf, 243);
+	write(1, buf, BOARD_FILE_SIZE);
 }
