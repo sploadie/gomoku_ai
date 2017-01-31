@@ -6,13 +6,13 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 12:26:44 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/15 12:29:23 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:21:49 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gomoku.h"
 
-t_board		*read_board(int fd)
+t_board		*read_board(int fd, t_player *player)
 {
 	int		i, j;
 	int		ret, len;
@@ -37,9 +37,19 @@ t_board		*read_board(int fd)
 			board.map[i][j] = buf[(j * 16) + i];
 		}
 	}
-	board.white = buf[BOARD_FILE_SIZE - 3] - '0';
-	board.black = buf[BOARD_FILE_SIZE - 2] - '0';
-	board.white5 = line5(&board, WHITE);
-	board.black5 = line5(&board, BLACK);
+	*player = player_create(buf[BOARD_FILE_SIZE - 2], 1);
+	if (player->color == WHITE)
+	{
+		board.hrc[1].captured = buf[BOARD_FILE_SIZE - 5] - '0';
+		board.hrc[0].captured = buf[BOARD_FILE_SIZE - 4] - '0';
+	}
+	else
+	{
+		board.hrc[0].captured = buf[BOARD_FILE_SIZE - 5] - '0';
+		board.hrc[1].captured = buf[BOARD_FILE_SIZE - 4] - '0';
+	}
+	board_line5(&board, *player);
+	board_free(&board, *player);
+	heuristic_calculate(&board);
 	return memdup(&board, sizeof(t_board));
 }

@@ -6,16 +6,19 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 11:47:08 by tgauvrit          #+#    #+#             */
-/*   Updated: 2016/12/17 13:07:32 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:57:10 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gomoku.h"
 
+int		g_alphabeta_depth = 4;
+
 int		main(int argc, char *argv[])
 {
-	int		fd;
-	t_board	*board;
+	int			fd;
+	t_board		*board;
+	t_player	player;
 
 	if (argc > 2)
 	{
@@ -32,7 +35,9 @@ int		main(int argc, char *argv[])
 			return 1;
 		}
 	}
-	board = read_board(fd);
-	print_board(board);
+	board = read_board(fd, &player);
+	print_board(board, player);
+	if (fd > 2)
+		close(fd);
 	return 0;
 }

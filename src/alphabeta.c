@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 14:22:12 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/17 17:00:28 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:40:46 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ static int	min(int a, int b)
 	return (a <= b ? a : b);
 }
 
-int		alphabeta_recurse(t_board *board, t_board *board_memory, int depth, t_ab ab, t_player player)
+static int	alphabeta_recurse(t_board *board, t_board *board_memory, int depth, t_ab ab, t_player player)
 {
 	int		value, i, count;
 
 	if (board->h == INT_MAX || board->h == INT_MIN)
 		return board->h;
 	if (depth == g_alphabeta_depth)
-		return heuristic_full_board(&board);
+		return board->h; // Cleaner calculation here maybe?
 	count = moves_get_boards(board, player, board_memory);
 	if (count == 0)
 		return 0;
@@ -77,19 +77,19 @@ t_move	alphabeta(t_board *board, int color)
 	t_ab		ab = ab_new();
 	t_player	player = player_create(color, 1);
 	t_board		*board_memory;
-	t_board		*tmp;
 
 	moves = malloc(sizeof(t_move) * MAX_MOVES);
 	board_memory = malloc(sizeof(t_board) * MAX_MOVES * (g_alphabeta_depth + 1));
-	heuristic_full_board(board, &player);
+	// heuristic_calculate(board);
 	count = moves_get(*board, player, moves);
 	if (count == 0)
 		return move_create(-1, -1, 0);
 	best = moves; // By default, first move is best move, jic
-	for (i = 0; i < count, ++i)
+	for (i = 0; i < count; ++i)
 	{
 		board_memory[i] = *board;
-		heuristic_partial_move(board_memory + i, player, moves[i].x, moves[i].y);
+		if (heuristic_partial_move(board_memory + i, player, moves[i].x, moves[i].y) == NULL)
+			continue;
 		value = alphabeta_recurse(board_memory + i, board_memory + MAX_MOVES, 1, ab, player_switch(player));
 		if (value > ab.alpha)
 		{

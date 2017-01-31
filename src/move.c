@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/18 12:31:13 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/17 17:01:02 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:44:54 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		move_compress(t_move move)
 {
-	return (move.x << 16 & move.y)
+	return (move.x << 16 & move.y);
 }
 
 t_move	move_decompress(int move)
@@ -26,7 +26,7 @@ t_move	move_decompress(int move)
 	return (new);
 }
 
-t_move	move_create(t_space x, t_space y, int h)
+t_move	move_create(t_space x, t_space y)
 {
 	t_move	new;
 
@@ -35,7 +35,7 @@ t_move	move_create(t_space x, t_space y, int h)
 	return new;
 }
 
-int		moves_get(t_board board, t_player player, t_move *moves)
+int		moves_get(t_board board, t_move *moves)
 {
 	int		x, base_x;
 	int		y, base_y;
@@ -67,6 +67,7 @@ int		moves_get_boards(t_board *board_model, t_player player, t_board *move_board
 	t_board	*start;
 
 	start = move_boards;
+	board = *board_model;
 	for (base_x = 0; base_x < 15; ++base_x)
 		for (base_y = 0; base_y < 15; ++base_y)
 			if (board.map[base_x][base_y] == WHITE || board.map[base_x][base_y] == BLACK)
@@ -77,8 +78,8 @@ int		moves_get_boards(t_board *board_model, t_player player, t_board *move_board
 								if (board.map[x][y] == EMPTY)
 								{
 									*move_boards = *board_model;
-									heuristic_partial_move(move_boards, player, x, y);
-									move_boards++;
+									if (heuristic_partial_move(move_boards, player, x, y) != NULL)
+										move_boards++;
 									board.map[x][y] = TEMPT;
 								}
 	return (move_boards - start);

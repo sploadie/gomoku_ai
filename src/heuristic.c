@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/18 10:53:28 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/17 17:18:10 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:46:22 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,49 +87,31 @@
 // 	capture = board_capture(&board, move.x, move.y);
 // }
 
-t_board		*heuristic_partial_move(t_board *board, t_player one, int move_x, int move_y)
+int		heuristic_value(t_heuristic hrc)
 {
-	t_heuristic hrc[2];
-	t_player	two;
-	int			count;
-
-	// Create player two info
-	two = player_switch(one);
-	// Clear heuristic table
-	bzero(hrc, sizeof(hrc));
-	// Set chip
-	board->map[move_x][move_y] = one.color;
-	// Handle capture and line5
-	count = board_capture(board, move_x, move_y);
-	// If no capture, check for double free three
-	// ==========================================================================================
-	// FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME 
-	// ==========================================================================================
-	// Grab heuristic values
-	if (one.color == WHITE)
-	{
-		// Player
-		hrc[one.maximizing].five_win = board->white5;
-		hrc[one.maximizing].captured = board->white;
-		// Opponent
-		hrc[two.maximizing].five_win = board->black5;
-		hrc[two.maximizing].captured = board->black;
-	}
-	else
-	{
-		// Player
-		hrc[one.maximizing].five_win = board->black5;
-		hrc[one.maximizing].captured = board->black;
-		// Opponent
-		hrc[two.maximizing].five_win = board->white5;
-		hrc[two.maximizing].captured = board->white;
-	}
-	// Calculate partial heuristic
-	board->h = heuristic_calculate(hrc);
-	return board;
+	(void)hrc;
+	return (0);
 }
 
-t_board		heuristic_full_board(t_board *board)
+void	heuristic_calculate(t_board *board)
 {
-	;
+	board->h = 0;
+}
+
+t_board	*heuristic_partial_move(t_board *board, t_player player, int move_x, int move_y)
+{
+	int			prev_captured, prev_free3;
+
+	// Save check values for double free3
+	prev_captured = board->hrc[player.maximizing].captured;
+	prev_free3 = board->hrc[player.maximizing].free3;
+	// Handle placing chip, capture, free3, free4, and line5
+	board_capture(board, player, move_x, move_y);
+	// Handle double free3 (if needed)
+	if (board->hrc[player.maximizing].captured == prev_captured)
+		if (board->hrc[player.maximizing].free3 >= prev_free3 + 2)
+			return (NULL);
+	// Calculate partial heuristic
+	heuristic_calculate(board);
+	return board;
 }

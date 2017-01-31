@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 11:47:16 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/17 15:18:38 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 12:48:34 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <fcntl.h>
 # include <limits.h>
 
-# define BOARD_FILE_SIZE 243
+# define BOARD_FILE_SIZE 245
 # define MINIMAX_DEPTH 4
 # define MAX_MOVES 192
 # define EMPTY '.'
@@ -37,9 +37,9 @@ typedef unsigned char	t_space;
 
 typedef struct			s_heuristic
 {
-	int		free_three;
-	int		free_four;
-	int		five_win;
+	int		free3;
+	int		free4;
+	int		line5;
 	int		captured;
 }						t_heuristic;
 
@@ -66,38 +66,37 @@ typedef struct			s_player
 typedef struct			s_board
 {
 	t_space				map[15][15];
-	// uint32_t:16			black;
-	// uint32_t:16			black5;
-	// uint32_t:16			white;
-	// uint32_t:16			white5;
-	uint32_t			black;
-	uint32_t			black5;
-	uint32_t			white;
-	uint32_t			white5;
+	t_heuristic			hrc[2];
 	int					h;
 }						t_board;
 
 // GLOBALS
-int			g_alphabeta_depth = 4;
+// Must be >= 1:
+extern int	g_alphabeta_depth;
 
 // FUNCTION DECLARATIONS
-t_board		*read_board(int fd);
-void		print_board(t_board *board);
+t_board		*read_board(int fd, t_player *player);
+void		print_board(t_board *board, t_player player);
 
 t_player	player_create(int color, int maximizing);
 t_player	player_switch(t_player player);
 t_player	player_maximizing(t_player player);
 
 t_ab		ab_new(void);
-int			alphabeta(t_board board, int depth, t_ab ab, t_player player);
+t_move		alphabeta(t_board *board, int color);
 
-int			move_compress(t_move move);
-t_move		move_decompress(int move);
-int			move_count(t_move *moves);
-void		moves_get(t_board board, t_player player, t_move *moves);
+t_move		move_create(t_space x, t_space y);
+int			moves_get(t_board board, t_move *moves);
+int			moves_get_boards(t_board *board_model, t_player player, t_board *move_boards);
 
-int			board_isvalid(int x, int y);
-int			board_capture(t_board *board, int x, int y);
+t_board		*heuristic_partial_move(t_board *board, t_player one, int move_x, int move_y);
+void		heuristic_calculate(t_board *board);
+
+int		board_isvalid(int x, int y);
+void	board_line5(t_board *board, t_player p);
+void	board_free(t_board *board, t_player p);
+void	point_all(t_board *board, t_player player, int x, int y, int mod);
+void	board_capture(t_board *board, t_player p, int x, int y);
 
 void		*memdup(void *data, size_t len);
 
