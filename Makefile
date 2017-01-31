@@ -6,7 +6,7 @@
 #    By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/20 16:35:37 by tgauvrit          #+#    #+#              #
-#    Updated: 2016/12/18 17:00:21 by tgauvrit         ###   ########.fr        #
+#    Updated: 2017/01/31 13:07:05 by tgauvrit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ FILENAMES :=	main		\
 				memdup		\
 				print_board	\
 				read_board	\
+				alphabeta   \
 				heuristic	\
 				player		\
 				board		\

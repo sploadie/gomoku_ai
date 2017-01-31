@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 14:22:12 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/31 12:40:46 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 13:06:44 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ t_move	alphabeta(t_board *board, int color)
 	moves = malloc(sizeof(t_move) * MAX_MOVES);
 	board_memory = malloc(sizeof(t_board) * MAX_MOVES * (g_alphabeta_depth + 1));
 	// heuristic_calculate(board);
-	count = moves_get(*board, player, moves);
+	count = moves_get(*board, moves);
 	if (count == 0)
-		return move_create(-1, -1, 0);
+		return move_create(-1, -1);
 	best = moves; // By default, first move is best move, jic
 	for (i = 0; i < count; ++i)
 	{

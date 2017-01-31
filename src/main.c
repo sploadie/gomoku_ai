@@ -6,7 +6,7 @@
 /*   By: tgauvrit <tgauvrit@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/17 11:47:08 by tgauvrit          #+#    #+#             */
-/*   Updated: 2017/01/31 12:57:10 by tgauvrit         ###   ########.fr       */
+/*   Updated: 2017/01/31 13:20:48 by tgauvrit         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int		main(int argc, char *argv[])
 	int			fd;
 	t_board		*board;
 	t_player	player;
+	t_move		move;
 
 	if (argc > 2)
 	{
@@ -36,8 +37,10 @@ int		main(int argc, char *argv[])
 		}
 	}
 	board = read_board(fd, &player);
-	print_board(board, player);
 	if (fd > 2)
 		close(fd);
+	print_board(board, player);
+	move = alphabeta(board, player.color);
+	dprintf(1, "Move: (%d, %d)\n", move.x, move.y);
 	return 0;
 }
