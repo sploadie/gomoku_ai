@@ -45,10 +45,9 @@ typedef struct			s_heuristic
 
 typedef struct			s_move
 {
-	// uint32_t:16			x;
-	// uint32_t:16			y;
 	uint32_t			x;
 	uint32_t			y;
+	int					h; // for sorting only
 }						t_move;
 
 typedef struct			s_ab
@@ -86,8 +85,9 @@ t_ab		ab_new(void);
 t_move		alphabeta(t_board *board, int color);
 
 t_move		move_create(t_space x, t_space y);
-int			moves_get(t_board board, t_move *moves);
+int			moves_get(t_board board, t_player player, t_move *moves);
 int			moves_get_boards(t_board *board_model, t_player player, t_board *move_boards);
+void		move_boards_sort(t_board *move_boards, int size);
 
 t_board		*heuristic_partial_move(t_board *board, t_player one, int move_x, int move_y);
 int			heuristic_calculate(t_board *board, int is_maximizing);

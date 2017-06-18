@@ -40,6 +40,8 @@ static int	alphabeta_recurse(t_board *board, t_board *board_memory, int depth, t
 	if (depth == g_alphabeta_depth)
 		return board->h; // Cleaner calculation here maybe?
 	count = moves_get_boards(board, player, board_memory);
+	if (depth < 5)
+		move_boards_sort(board_memory, count);
 	if (count == 0)
 		return 0;
 	if (player.maximizing)
@@ -81,7 +83,7 @@ t_move	alphabeta(t_board *board, int color)
 	moves = malloc(sizeof(t_move) * MAX_MOVES);
 	board_memory = malloc(sizeof(t_board) * MAX_MOVES * (g_alphabeta_depth + 1));
 	// heuristic_calculate(board);
-	count = moves_get(*board, moves);
+	count = moves_get(*board, player, moves);
 	if (count == 0)
 		return move_create(-1, -1);
 	best = moves; // By default, first move is best move, jic
