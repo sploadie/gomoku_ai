@@ -54,7 +54,7 @@ static int	alphabeta_recurse(t_board *board, t_board *board_memory, int depth, t
 		}
 		return value;
 	}
-	else
+	else // minimizing
 	{
 		value = INT_MAX;
 		for (i = 0; i < count; ++i)

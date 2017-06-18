@@ -37,10 +37,10 @@ typedef unsigned char	t_space;
 
 typedef struct			s_heuristic
 {
-	int		free3;
-	int		free4;
-	int		line5;
-	int		captured;
+	int		free3;    // 12% (4%  per free3, max 3)
+	int		free4;    // 20% (10% per free4, max 2)
+	int		line5;    // 30% (MAX/MIN if opposing player turn)
+	int		captured; // 36% (4%  per capture, max 9)
 }						t_heuristic;
 
 typedef struct			s_move
@@ -90,13 +90,13 @@ int			moves_get(t_board board, t_move *moves);
 int			moves_get_boards(t_board *board_model, t_player player, t_board *move_boards);
 
 t_board		*heuristic_partial_move(t_board *board, t_player one, int move_x, int move_y);
-void		heuristic_calculate(t_board *board);
+int			heuristic_calculate(t_board *board, int is_maximizing);
 
-int		board_isvalid(int x, int y);
-void	board_line5(t_board *board, t_player p);
-void	board_free(t_board *board, t_player p);
-void	point_all(t_board *board, t_player player, int x, int y, int mod);
-void	board_capture(t_board *board, t_player p, int x, int y);
+int			board_isvalid(int x, int y);
+void		board_line5(t_board *board, t_player p);
+void		board_free(t_board *board, t_player p);
+void		point_all(t_board *board, t_player player, int x, int y, int mod);
+void		board_capture(t_board *board, t_player p, int x, int y);
 
 void		*memdup(void *data, size_t len);
 

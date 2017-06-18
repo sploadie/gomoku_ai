@@ -50,6 +50,6 @@ t_board		*read_board(int fd, t_player *player)
 	}
 	board_line5(&board, *player);
 	board_free(&board, *player);
-	heuristic_calculate(&board);
+	heuristic_calculate(&board, player->maximizing);
 	return memdup(&board, sizeof(t_board));
 }

@@ -145,6 +145,7 @@ void	board_free(t_board *board, t_player p)
 				point_all_free(board, o, x, y, 1);
 		}
 	// SHOULD PROBABLY DEBUG CHECK THIS AT SOME POINT TO ENSURE IT WORKS AS INTENDED
+	// SO FAR THIS WORKS AS INTENDED
 	board->hrc[0].free3 = board->hrc[0].free3 / 3;
 	board->hrc[1].free3 = board->hrc[1].free3 / 3;
 	board->hrc[0].free4 = board->hrc[0].free4 / 4;
