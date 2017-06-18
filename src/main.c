@@ -12,7 +12,27 @@
 
 #include "gomoku.h"
 
-int		g_alphabeta_depth = 4;
+/* ************************************************************************** */
+#include <sys/time.h>
+
+static struct timeval tm1;
+
+static inline void start()
+{
+    gettimeofday(&tm1, NULL);
+}
+
+static inline void stop()
+{
+    struct timeval tm2;
+    gettimeofday(&tm2, NULL);
+
+    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
+    printf("Time: %llu ms\n", t);
+}
+/* ************************************************************************** */
+
+int		g_alphabeta_depth = 7;
 
 int		main(int argc, char *argv[])
 {
@@ -40,7 +60,9 @@ int		main(int argc, char *argv[])
 	if (fd > 2)
 		close(fd);
 	print_board(board, player);
+	start();
 	move = alphabeta(board, player.color);
+	stop();
 	dprintf(1, "Move: (%d, %d)\n", move.x, move.y);
 	return 0;
 }

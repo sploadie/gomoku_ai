@@ -14,7 +14,7 @@ NAME =			gomoku_ai
 
 CC =			clang
 
-FLAGS =			-Wall -Werror -Wextra
+FLAGS =			-Wall -Werror -Wextra -O3
 
 HEADERS =		-I ./include
 
