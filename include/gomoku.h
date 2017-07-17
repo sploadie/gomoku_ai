@@ -75,6 +75,7 @@ extern int	g_alphabeta_depth;
 
 // FUNCTION DECLARATIONS
 t_board		*read_board(int fd, t_player *player);
+t_board		*parse_board(char *string, t_player *player);
 void		print_board(t_board *board, t_player player);
 
 t_player	player_create(int color, int maximizing);
